@@ -3,6 +3,7 @@ import re
 import nltk
 import sklearn
 import time
+import joblib
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -16,16 +17,13 @@ nltk.download('wordnet')
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 from sklearn.metrics import classification_report
-
+from sklearn.model_selection import train_test_split
 
 ## Import Dataset ##
-training_file_path = 'C:/Users/work/trainingandtestdata/training.1600000.processed.noemoticon.csv'
-test_file_path = 'C:/Users/work/trainingandtestdata/testdata.manual.2009.06.14.csv'
+file_path = 'C:/Users/work/Sensation/reduced_tweet_dataset.csv'
 
-#Target: sentiemnt (0=negative, 2=netural, 4=positive)   Text: actual tweet
-columns = ['target', 'id', 'date', 'flag', 'user', 'text']
-df_train = pd.read_csv(training_file_path, encoding='latin-1', names=columns)
-df_test = pd.read_csv(test_file_path, encoding='latin-1', names=columns)
+#Target: sentiemnt (0=negative, 4=positive)   Text: actual tweet
+df = pd.read_csv(file_path, encoding='latin-1')
 
 ## Process Data ##
 lemmatizer = WordNetLemmatizer()
@@ -46,8 +44,18 @@ def preprocess_text(text):
     return ' '.join(filtered_words)
 
 ## Create a new cleaned text column ##
-df_train['cleaned_text'] = df_train['text'].apply(preprocess_text)
-df_test['cleaned_text'] = df_test['text'].apply(preprocess_text)
+df['cleaned_text'] = df['text'].apply(preprocess_text)
+
+##Split data
+target_0 = df[df['target'] == 0]
+target_4 = df[df['target'] == 4]
+
+train_0, test_0 = train_test_split(target_0, test_size=0.2, random_state=42)   # Split target 0 into training (80%) and testing (20%)
+train_4, test_4 = train_test_split(target_4, test_size=0.2, random_state=42)
+
+
+df_train = pd.concat([train_0, train_4])   # Combine the training data from both target groups
+df_test = pd.concat([test_0, test_4])
 
 X_train = df_train['cleaned_text']
 Y_train = df_train['target']
@@ -55,19 +63,25 @@ Y_train = df_train['target']
 x_test = df_test['cleaned_text']
 y_test = df_test['target']
 
-
 ## Vectorize the text ## 
 vectorizer = TfidfVectorizer(max_features=5000)  #choose 5000 highest TF-IDF words and discard the rest (basically selected the top 5000 words that appear the most)
-X_train_vect = vectorizer.fit_transform(X_train)
-x_test_vect = vectorizer.fit_transform(x_test)
-
+print("Vectorization started")
 start_time = time.time()
+X_train_vect = vectorizer.fit_transform(X_train)
+x_test_vect = vectorizer.transform(x_test)
+print(f"Vectorization finished in {time.time() - start_time} seconds")
 
 ## SVM model ##
-svm_model = SVC(kernal = 'rbf', cache_size=2000, verbose = True)
+svm_model = SVC(kernel = 'linear', cache_size=2000, verbose = True)
 print("training started")
+start_time = time.time()
 svm_model = svm_model.fit(X_train_vect, Y_train)
-print(f"training finished in {start_time}")
+print(f"Training finished in {time.time() - start_time} seconds")
 y_pred = svm_model.predict(x_test_vect)
 
 print(classification_report(y_test, y_pred))
+
+# Save the model
+model_file_path = "svm_model.pkl"
+joblib.dump(svm_model, model_file_path)
+print(f"Model saved to {model_file_path}")
