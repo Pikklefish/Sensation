@@ -1,13 +1,20 @@
 from dependencies import *
 
-##Streamlit UI components
-st.title("Sentiment Analysis ML model")
+# ----Page Configuration----
+st.set_page_config(page_title="Sensation", page_icon= "	:page_with_curl:", layout="wide")
 
-user_input = st.text_input("Enter text for analysis:")
+# ----Header Section----
+with st.container():
+    st.subheader("This program will analyze the tone of your text :wave:")
+    st.title("Sentiment Analysis ML model")
+
+# Use local CSS
 
 st.sidebar.title("Model Selection")
 uploaded_model=st.sidebar.file_uploader("Upload a pre-trained model", type=['pkl'])
 
+
+user_input = st.text_input("Enter text for analysis:")
 if st.button("Analyze Text"):
     if user_input:
         st.write(f"Analyzing: {user_input}")
