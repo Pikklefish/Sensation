@@ -77,7 +77,7 @@ print(f"Vectorization finished in {time.time() - start_time} seconds")
 param_grid = {'C': [0.01, 0.1, 1, 10]}
 
 ## SVM model ##
-svm_model = SVC(kernel = 'linear', cache_size=1000, verbose = True)
+svm_model = SVC(kernel = 'rbf', cache_size=1000, verbose = True)
 grid_search = GridSearchCV(svm_model, param_grid, cv=5, verbose=2)
 print("training started")
 start_time = time.time()
