@@ -1,87 +1,73 @@
-import pandas as pd
-import re
-import nltk
-import sklearn
-import time
-import joblib
+from dependencies import *
 
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer
+# ## Import Dataset ##
+# file_path = 'C:/Users/work/Sensation/reduced_tweet_dataset.csv'
 
-nltk.download('punkt')
-nltk.download('punkt_tab')
-nltk.download('stopwords')
-nltk.download('wordnet')
+# #Target: sentiemnt (0=negative, 4=positive)   Text: actual tweet
+# df = pd.read_csv(file_path, encoding='latin-1')
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.svm import SVC
-from sklearn.metrics import classification_report
-from sklearn.model_selection import train_test_split
+# ## Create a new cleaned text column ##
+# df['cleaned_text'] = df['text'].apply(lambda x: preprocess_text(x, lemmatizer, stop_words))
 
-## Import Dataset ##
-file_path = 'C:/Users/work/Sensation/reduced_tweet_dataset.csv'
-
-#Target: sentiemnt (0=negative, 4=positive)   Text: actual tweet
-df = pd.read_csv(file_path, encoding='latin-1')
-
-## Process Data ##
-lemmatizer = WordNetLemmatizer()
-stop_words = set(stopwords.words('english'))
-
-def preprocess_text(text):
-    #Remove URLS, mentions, tags etc ...
-    text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
-    text = re.sub(r'\@\w+|\#','', text)
-    text = re.sub(r'[^A-Za-z0-9 ]+', '', text)
-
-    #lower case
-    text = text.lower()
-
-    #Tokenize and remove stopwords
-    tokens = word_tokenize(text)
-    filtered_words = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words]
-    return ' '.join(filtered_words)
-
-## Create a new cleaned text column ##
-df['cleaned_text'] = df['text'].apply(preprocess_text)
-
-##Split data
-target_0 = df[df['target'] == 0]
-target_4 = df[df['target'] == 4]
-
-train_0, test_0 = train_test_split(target_0, test_size=0.2, random_state=42)   # Split target 0 into training (80%) and testing (20%)
-train_4, test_4 = train_test_split(target_4, test_size=0.2, random_state=42)
+# ## Process Text
+# X_train, Y_train, x_test, y_test = split_data(df)
+# X_train_vect, x_test_vect = vectorizer_text(X_train, x_test, vectorizer)
+# joblib.dump(vectorizer,'vectorizer.pkl')
 
 
-df_train = pd.concat([train_0, train_4])   # Combine the training data from both target groups
-df_test = pd.concat([test_0, test_4])
+# ## SVM model ##
+# svm_model = SVC(kernel = 'linear', cache_size=2000, verbose = True)
+# print("training started")
+# start_time = time.time()
+# svm_model = svm_model.fit(X_train_vect, Y_train)
+# print(f"Training finished in {time.time() - start_time} seconds")
+# y_pred = svm_model.predict(x_test_vect)
 
-X_train = df_train['cleaned_text']
-Y_train = df_train['target']
+# print(classification_report(y_test, y_pred))
 
-x_test = df_test['cleaned_text']
-y_test = df_test['target']
+# # Save the model
+# model_file_path = "svm_model.pkl"
+# joblib.dump(svm_model, model_file_path)
+# print(f"Model saved to {model_file_path}")
 
-## Vectorize the text ## 
-vectorizer = TfidfVectorizer(max_features=5000)  #choose 5000 highest TF-IDF words and discard the rest (basically selected the top 5000 words that appear the most)
-print("Vectorization started")
-start_time = time.time()
-X_train_vect = vectorizer.fit_transform(X_train)
-x_test_vect = vectorizer.transform(x_test)
-print(f"Vectorization finished in {time.time() - start_time} seconds")
 
-## SVM model ##
-svm_model = SVC(kernel = 'linear', cache_size=2000, verbose = True)
-print("training started")
-start_time = time.time()
-svm_model = svm_model.fit(X_train_vect, Y_train)
-print(f"Training finished in {time.time() - start_time} seconds")
-y_pred = svm_model.predict(x_test_vect)
 
-print(classification_report(y_test, y_pred))
 
-# Save the model
-model_file_path = "svm_model.pkl"
-joblib.dump(svm_model, model_file_path)
-print(f"Model saved to {model_file_path}")
+
+
+
+
+
+
+def load_or_train_model( uploaded_model):
+    if uploaded_model:
+        # Load user-provided model from file
+        model = joblib.load(uploaded_model)
+        st.write("Model loaded successfully!")
+        return model
+
+
+##Streamlit UI components
+st.title("Sentiment Analysis ML model")
+
+user_input = st.text_input("Enter text for analysis:")
+
+st.sidebar.title("Model Selection")
+uploaded_model=st.sidebar.file_uploader("Upload a pre-trained model", type=['pkl'])
+
+if st.button("Analyze Text"):
+    if user_input:
+        st.write(f"Analyzing: {user_input}")
+
+        processed_text = preprocess_text(user_input, lemmatizer, stop_words)
+
+        user_input_vect = vectorizer_text_app(user_input, vectorizer_app)
+
+        model = load_or_train_model(uploaded_model)
+        prediction = model.predict(user_input_vect)
+        if prediction == 0:
+            st.write("🤖 The sentiment of the input text is **Negative**.")
+        else:
+            st.write("🤖 The sentiment of the input text is **Positive**.")
+    else:
+        st.write("Please enter some text to analyze.")
