@@ -20,5 +20,5 @@ def split_data(df):
         return X_train, Y_train, x_test, y_test
 
     except Exception as e:
-        print(f"Error occured in SPLIT_DATA.py: {e}")
+        st.error(f"Error occured in SPLIT_DATA.py: {e}")
 

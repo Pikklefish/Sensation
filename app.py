@@ -25,9 +25,12 @@ if st.button("Analyze Text"):
 
         model = load_model(uploaded_model)
         prediction = model.predict(user_input_vect)
+
         if prediction == 0:
-            st.write("🤖 The sentiment of the input text is **Negative**.")
+            st.error("🤖 Negative Sentiment Detected!")
         else:
-            st.write("🤖 The sentiment of the input text is **Positive**.")
+            st.success("🤖 Positive Sentiment Detected!")
+            st.balloons()  # Trigger balloons for positive sentiment
+
     else:
         st.write("Please enter some text to analyze.")

@@ -9,6 +9,6 @@ def load_model( uploaded_model):
             st.write("Model loaded successfully!")
             return model
         except Exception as e:
-                st.write(f"Error loading the model: {e}")
+                st.error(f"Error loading the model: {e}")
     else:
         st.write("Please upload a pre-trained model.")

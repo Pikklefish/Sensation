@@ -16,5 +16,5 @@ def preprocess_text(text, lemmatizer, stop_words):
         return ' '.join(filtered_words)
     
     except Exception as e:
-        print(f"Error occured in PREPROCESS_TEXT.py: {e}")
+        st.error(f"Error occured in PREPROCESS_TEXT.py: {e}")
 

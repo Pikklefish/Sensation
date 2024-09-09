@@ -7,4 +7,4 @@ def vectorizer_text_app(text, vectorizer_app):
         return text_vect
     
     except Exception as e:
-        print(f"Error occured in VECTORIZER_TEXT_APP.py: {e}")
+        st.error(f"Error occured in VECTORIZER_TEXT_APP.py: {e}")
