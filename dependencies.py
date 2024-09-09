@@ -26,6 +26,8 @@ from Data_Process.split_data import split_data
 from Data_Process.vectorizer_text import vectorizer_text
 from Data_Process.vectorizer_text_app import vectorizer_text_app
 
+from Web_Components.load_model import load_model
+
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))
 
