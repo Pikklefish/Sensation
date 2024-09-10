@@ -34,6 +34,8 @@ For vectorizers `Word2vec` and `BERT` (not a vectorizer) were considered; howeve
 1. I am doing a simple sentiment analysis (positive/negative), so doing semantic analysis would be overengineering, and with my Sentiment140 data there simply wouldn’t be enough data to train on it. 
 2. Fine tuning and extra training are required. “Word2vec” and “BERT” are computationally expensive, so they would not fit my current resource constraints, and fine-tuning is required.
 
+Data split was done following the Pareto principle (80/20 split)
+
 ### ML Model
 Between the countless ML models, I choose the Support Vector Machine (SVM) because of SVM's strength in handling high-dimensional  data and determine the optimal hyperplane even when the data are not linerly separable using kernals (linear, rbf, poly, sigmoid). Additionally, a grid search for the optimal regularization value (C value) was performed (0.01,0.1,1,10) and the best regularization value returned to be C=1 (defualt). Below are the different analytics on the models:
 
