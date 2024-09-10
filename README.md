@@ -40,7 +40,7 @@ Between the countless ML models, I choose the Support Vector Machine (SVM) becau
 Linear SVM Model (Training finished in 219.77057337760925 seconds)
 ![Image](images/Linear_SVM.png)
 
-RBF SVM Model (627.6614954471588 seconds)
+RBF SVM Model (Training finished in 627.6614954471588 seconds)
 ![Image](images/RBF_SVM.png)
 
 POLY SVM Model (Training finished in 1147.7607135772705 seconds)
