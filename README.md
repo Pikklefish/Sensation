@@ -26,7 +26,7 @@ I used the below resources:
 
 ### Data Cleaning
 The functions that operate this process can be found in `Data_Process` directory. The below image shows a overall process for data cleaning
-![Data Processing Image](images\Figure-3.-Some-of-the-Basic-Text-Preprocessing-Steps.png)
+![Data Processing Image](images/Figure-3.-Some-of-the-Basic-Text-Preprocessing-Steps.png)
 
 Lemmatization was used instead of Stemming as Lemmatization consideres the word context and part of speech, resutling in more precise transformations and valid words. However the downside is that it is more computationally expensive.
 
@@ -38,16 +38,16 @@ For vectorizers `Word2vec` and `BERT` (not a vectorizer) were considered; howeve
 Between the countless ML models, I choose the Support Vector Machine (SVM) because of SVM's strength in handling high-dimensional  data and determine the optimal hyperplane even when the data are not linerly separable using kernals (linear, rbf, poly, sigmoid). Additionally, a grid search for the optimal regularization value (C value) was performed (0.01,0.1,1,10) and the best regularization value returned to be C=1 (defualt). Below are the different analytics on the models:
 
 Linear SVM Model (Training finished in 219.77057337760925 seconds)
-![Image](images\Linear_SVM.png)
+![Image](images/Linear_SVM.png)
 
 RBF SVM Model (627.6614954471588 seconds)
-![Image](images\RBF_SVM.png)
+![Image](images/RBF_SVM.png)
 
 POLY SVM Model (Training finished in 1147.7607135772705 seconds)
-![Image](images\POLY_SVM.png)
+![Image](images/POLY_SVM.png)
 
 SIGMOID SVM Model (Training finished in 220.05506205558777 seconds)
-![Image](images\SIGMOID_SVM.png)
+![Image](images/SIGMOID_SVM.png)
 
 The regularized model classification report are not included as C=1 is a defualt value.
 
