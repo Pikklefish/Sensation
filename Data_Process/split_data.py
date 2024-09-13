@@ -22,4 +22,5 @@ def split_data(df):
     except Exception as e:
         logging.error(f"An unexpected error occurred in SPLIT_DATA.py: {e}")
         st.error(f"Error occured in SPLIT_DATA.py: {e}")
+        return None
 

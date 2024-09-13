@@ -13,3 +13,4 @@ def vectorizer_text(X_train, x_test, vectorizer):
     except Exception as e:
         logging.error(f"An unexpected error occurred in VECTORIZER_TEXT.py: {e}")
         st.error(f"Error occured in VECTORIZER_TEXT.py: {e}")
+        return None
