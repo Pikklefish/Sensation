@@ -4,6 +4,7 @@ import time
 import joblib
 import re
 import streamlit as st
+import logging
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -27,6 +28,7 @@ from Data_Process.vectorizer_text import vectorizer_text
 from Data_Process.vectorizer_text_app import vectorizer_text_app
 
 from Web_Components.load_model import load_model
+from Web_Components.ui_setup import ui_setup
 
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))
@@ -34,3 +36,5 @@ stop_words = set(stopwords.words('english'))
 vectorizer = TfidfVectorizer(max_features=5000)  #choose 5000 highest TF-IDF words and discard the rest (basically selected the top 5000 words that appear the most)
 
 vectorizer_app = joblib.load('vectorizer.pkl')
+
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')

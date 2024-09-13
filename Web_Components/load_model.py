@@ -9,6 +9,7 @@ def load_model( uploaded_model):
             st.write("Model loaded successfully!")
             return model
         except Exception as e:
-                st.error(f"Error loading the model: {e}")
+                logging.error(f"An unexpected error occurred in UPLOADED_MODEL.PY: {e}")
+                st.error(f"Error loading the model in UPLOADED_MODEL.PY: {e}")
     else:
         st.write("Please upload a pre-trained model.")
